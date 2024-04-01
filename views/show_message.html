@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Messages</title>
+    <style>
+        .error, .alert-danger {
+            color: red;
+        }
+        .alert-success{
+            color:green;
+        }
+        .key-container {
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(#8B93FF, #FF71CD);
+            margin-top: -16px;
+        }
+
+        .key-form-container {
+            background-color: white;
+            box-shadow: 4px 4px 11px 2px #ddddddb3;
+            border-radius: 10px;
+            padding: 40px;
+        }
+
+        .form-control {
+            border: none !important;
+            border-radius: 0px!important;
+            outline: none !important;
+            border-bottom: 1px solid #dee2e6!important;
+        }
+
+        .error-message {
+            background-color: rgb(248, 98, 98)!important;
+            color: red !important;
+            height: 0px!important;
+        }
+    </style>
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="key-container d-flex flex-column justify-content-center align-items-center">
+        <div class="key-form-container">
+            <h3 class="text-center mb-3">Read Message</h3>
+            <form method="post" action="web.php?page=read-messages" id="messageForm" onsubmit="return validateForm()">
+                <?php if (isset($successMessage)) { ?>
+                    <div class="alert alert-success" role="alert"><?php echo $successMessage; ?></div>
+                <?php } elseif (isset($errorMessage)) { ?>
+                    <div class="alert alert-danger" role="alert"><?php echo $errorMessage; ?></div>
+                <?php } ?>
+                <div class="form-group">
+                    <label for="email" class="form-label">Your Email:</label>
+                    <input type="email" id="email" name="email" class="form-control">        
+                    <span class="error" id="emailError"></span><br><br>
+                </div>
+                <div class="form-group">
+                    <label for="decryption_key" class="form-label">Decryption Key:</label>
+                    <input type="password" id="decryption_key" name="decryption_key" class="form-control">
+                    <span class="error" id="decryptionKeyError"></span><br><br>
+                </div>
+                <button class="btn btn-success" type="submit" name="read">Read Message</button>
+                <button class="btn btn-warning ms-2" type="button" onclick="window.location.href = 'web.php?page=home'; resetFields();">Back</button>
+            </form>
+        </div>
+    </div>
+    <!-- JavaScript to reset input fields -->
+    <script>
+        function validateForm() {
+            var email = document.getElementById("email").value;
+            var decryptionKey = document.getElementById("decryption_key").value;
+            var emailError = document.getElementById("emailError");
+            var decryptionKeyError = document.getElementById("decryptionKeyError");
+
+            // Validate email field
+            if (email.trim() === "") {
+                emailError.textContent = "Email is required";
+                return false;
+            } else if (!isValidEmail(email)) {
+                emailError.textContent = "Please enter a valid email address";
+                return false;
+            } else {
+                emailError.textContent = "";
+            }
+
+            // Validate decryption key field
+            if (decryptionKey.trim() === "") {
+                decryptionKeyError.textContent = "Decryption Key is required";
+                return false;
+            } else {
+                decryptionKeyError.textContent = "";
+            }
+
+            return true; // Return true if all validations pass
+        }
+
+        function isValidEmail(email) {
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Function to reset input fields
+        function resetFields() {
+            document.getElementById("email").value = "";
+            document.getElementById("decryption_key").value = "";
+        }
+
+        // Call the resetFields function when the page loads
+        window.onload = resetFields;
+    </script>
+       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+</html>
